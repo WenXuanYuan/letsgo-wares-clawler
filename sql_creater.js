@@ -36,7 +36,7 @@ export const createProductFrontendCategorySql = (id, productId, categoryId = 173
 });
 
 export const createSkusSql = (id, productId, code, name, barcode, price, stock, unit) => new Promise((resolve, reject) => {
-  let data = `\n(${id}, ${productId}, '${code}', '${name}', '${barcode}', ${price}, ${stock}, '${unit}', 1, '${date}', '${date}')`;
+  let data = `(${id}, ${productId}, '${code}', '${name}', '${barcode}', ${price}, ${stock}, '${unit}', 1, '${date}', '${date}')`;
   fs.appendFile('result/skus.sql', `\n${data},`, err => {
     err ? reject(err) : resolve(data);
   });

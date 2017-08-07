@@ -1,13 +1,15 @@
-let p = i => new Promise((resolve, reject) => {
-  let time = Math.random() * 1000;
-  setTimeout(resolve, time, i);
-});
-
-let func = async () => {
-  for (let i = 0; i < 6; i++) {
-    let res = await p(i);
-    console.log(res);
-  }
+function a () {
+  throw new Error('error in a');
+};
+function b () {
+  a();
+};
+function c () {
+  b();
 };
 
-func();
+try {
+  c();
+} catch (err) {
+  console.log(err.message);
+}

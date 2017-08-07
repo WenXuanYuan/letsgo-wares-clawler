@@ -19,15 +19,13 @@ import {
 import {
   queryFrontendCategories,
   queryFrontendCategoryId,
-  queryProperty
+  queryProperty,
+  queryValue
 } from './sql_executer.js';
 import read from './read.js';
 import fs from 'fs';
 import log from './log.js';
 const file = 'wares.txt';
-const handleProperty = property => new Promise((resolve, reject) => {
-
-});
 
 let productId = 1;
 let skuId = 1;
@@ -63,13 +61,13 @@ read(file, async line => {
      */
     let productCode = '0001' + String(productId).padStart(6, 0);
     tmpSql = await createProductsSql(productId, data[1], productCode, '规格: ' + data[2]);
-    sqlData.products = `${ProductsInsertHead} ${tmpSql};`;
+    sqlData.products = `${ProductsInsertHead}\n${tmpSql};`;
 
     /**
      * write frontend category id
      */
     let frontendCates = await queryFrontendCategories(info.cateWords);
-    let cate;
+    let cate = 173;
     if (frontendCates.length !== 0) {
       frontendCates = getCategories(frontendCates);
     // console.log(frontendCates);
@@ -80,7 +78,7 @@ read(file, async line => {
       }
     }
     tmpSql = await createProductFrontendCategorySql(productFrontendCategotyId, productId, cate);
-    sqlData.product_frontend_category = `${ProductFrontendCategotyInsertHead} ${tmpSql};`;
+    sqlData.product_frontend_category = `${ProductFrontendCategotyInsertHead}\n${tmpSql};`;
 
     /**
      * write skus
@@ -88,7 +86,7 @@ read(file, async line => {
     let skuCode = productCode + '01';
     let price = Math.ceil(parseFloat(data[4]) * 100);
     tmpSql = await createSkusSql(skuId, productId, skuCode, '', data[0], price, 1000, data[3]);
-    sqlData.skus = `${SkusInsertHead} ${tmpSql};`;
+    sqlData.skus = `${SkusInsertHead}\n${tmpSql};`;
 
     /**
      * write images
@@ -124,8 +122,13 @@ read(file, async line => {
     let prid = propertyId;
     let vid = valueId;
     let svid = skuValueId;
-    tmpSql = {};
-    info.properties.forEach(async (property, i) => {
+    tmpSql = {
+      properties: '',
+      values: '',
+      sku_value: ''
+    };
+    for (let i = 0; i < info.properties.length; i++) {
+      let property = info.properties[i];
       let cprid, cvid, hasNewProperty = false, hasNewValue = false;
       cprid = await queryProperty(property.name);
       if (!cprid) {
@@ -143,6 +146,7 @@ read(file, async line => {
           tmpSql.values += `\n${await createValuesSql(cvid, cprid, property.value)}`;
         }
       }
+      tmpSql.sku_value += `\n${await createSkuValueSql(svid++, skuId, cvid)}`;
       if (i === info.properties.length - 1) {
         if (hasNewProperty) {
           tmpSql.properties += ';';
@@ -150,6 +154,7 @@ read(file, async line => {
         if (hasNewValue) {
           tmpSql.values += ';';
         }
+        tmpSql.sku_value += ';';
       } else {
         if (hasNewProperty) {
           tmpSql.properties += ',';
@@ -157,12 +162,34 @@ read(file, async line => {
         if (hasNewValue) {
           tmpSql.values += ',';
         }
+        tmpSql.sku_value += ',';
       }
-      tmpSql.sku_value += `\n${await createSkuValueSql(svid++, skuId, cvid)}`;
-    });
-    sqlData.properties = PropertiesInsertHead + tmpSql.properties;
-    sqlData.values = ValuesInsertHead + tmpSql.properties;
-    sqlData.sku_value = ValuesInsertHead + tmpSql.sku_value;
+    }
+    // console.log(tmpSql.properties);
+    if (tmpSql.properties) {
+      sqlData.properties = PropertiesInsertHead + tmpSql.properties;
+    }
+    if (tmpSql.values) {
+      sqlData.values = ValuesInsertHead + tmpSql.values;
+    }
+    if (tmpSql.sku_value) {
+      sqlData.sku_value = SkuValueInsertHead + tmpSql.sku_value;
+    }
+    fs.writeFileSync('result/test.sql',
+`${sqlData.products}
+
+${sqlData.product_frontend_category}
+
+${sqlData.skus}
+
+${sqlData.images}
+
+${sqlData.properties}
+
+${sqlData.values}
+
+${sqlData.sku_value}`
+    );
     console.log(sqlData);
     // console.log('-------- run here -----------');
 

@@ -62,10 +62,12 @@ export const getInfo = text => {
 
   $('ul.p-parameter-list>li').each(function (i, li) {
     let property = {};
-    property.value = $(this).attr('title');
     let name = $(this).text().split('：')[0];
-    property.name = name;
-    properties.push(property);
+    if (name !== '商品编号') {
+      property.value = $(this).attr('title');
+      property.name = name;
+      properties.push(property);
+    }
   });
   // return properties;
 
@@ -130,7 +132,7 @@ export const getCategories = cates => {
       cate2 = code;
     } else {
       // console.log('level3', code);
-      cate3 = code;
+      cate3 = cates[i].id;
       break;
     }
   }
