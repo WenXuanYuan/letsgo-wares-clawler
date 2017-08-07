@@ -1,0 +1,26 @@
+{
+  "name": "ware_crawler",
+  "version": "0.0.0",
+  "description": "crawl wares data from jd",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "wanxingcheng"
+  ],
+  "author": "wen",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "cheerio": "^1.0.0-rc.2",
+    "iconv-lite": "^0.4.18",
+    "mysql": "^2.14.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "gbk-dict": "0.0.1"
+  }
+}
