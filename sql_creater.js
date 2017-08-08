@@ -51,7 +51,9 @@ export const createImagesSql = (id, skuId, path, number) => new Promise((resolve
 
 export const createPropertiesSql = (id, name) => new Promise((resolve, reject) => {
   let data = `(${id}, '${name}', 3, '${name}', 0, '${date}', '${date}')`;
+  // console.log(data);
   fs.appendFile('result/properties.sql', `\n${data},`, err => {
+    // console.log(data);
     err ? reject(err) : resolve(data);
   });
 });

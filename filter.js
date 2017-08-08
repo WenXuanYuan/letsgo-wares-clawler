@@ -63,8 +63,9 @@ export const getInfo = text => {
   $('ul.p-parameter-list>li').each(function (i, li) {
     let property = {};
     let name = $(this).text().split('：')[0];
-    if (name !== '商品编号') {
-      property.value = $(this).attr('title');
+    name = name.trim();
+    if (name !== '商品编号' && name !== '商品名称' && name !== '包装单位' && name !== '店铺') {
+      property.value = $(this).attr('title').trim();
       property.name = name;
       properties.push(property);
     }

@@ -1,5 +1,6 @@
-# clear table
+# handle process
 
+## clear table
 TRUNCATE TABLE `sku_value`;
 TRUNCATE TABLE `values`;
 TRUNCATE TABLE `properties`;
@@ -7,6 +8,24 @@ TRUNCATE TABLE `images`;
 TRUNCATE TABLE `skus`;
 TRUNCATE TABLE `product_frontend_category`;
 TRUNCATE TABLE `products`;
+
+## clear file
+images/
+error.log
+error.txt
+images.sql
+product_frontend_category.sql
+products.sql
+properties.sql
+sku_value.sql
+skus.sql
+test.sql
+values.sql
+
+## run
+./babel-node index.js
+
+# test data
 
 INSERT INTO `products` (`id`, `shop_id`, `category_id`, `name`, `code`, `desc`, `created_at`, `updated_at`) VALUES
 (1, 1, NULL, 'G7三合一咖啡', '0001000001', '规格: 800G', '2017-07-08 19:07:04', '2017-07-08 19:07:04');

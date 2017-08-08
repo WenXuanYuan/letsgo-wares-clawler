@@ -1,15 +1,5 @@
-function a () {
-  throw new Error('error in a');
-};
-function b () {
-  a();
-};
-function c () {
-  b();
-};
+let a = String('
+dddddddd
+  ');
 
-try {
-  c();
-} catch (err) {
-  console.log(err.message);
-}
+console.log(a);
